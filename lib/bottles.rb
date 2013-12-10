@@ -14,61 +14,21 @@ class BottlesSong
 end
 
 class Verse
-  attr_reader :number, :fork
+  attr_accessor :n
+  def initialize(n)
+    @n = n
+  end
   
-  def initialize(verse_number)
-    @number = verse_number
-    @fork = Fork.new(number)
+  def verses
+   Hash.new("#{n} bottles of beer on the wall, #{n} bottles of beer.\nTake one down and pass it around, #{n-1} bottles of beer on the wall.\n")
+     .merge!({
+      0 => "No more bottles of beer on the wall, no more bottles of beer.\nGo to the store and buy some more, 99 bottles of beer on the wall.\n",
+      1 => "1 bottle of beer on the wall, 1 bottle of beer.\nTake it down and pass it around, no more bottles of beer on the wall.\n",
+      2 => "2 bottles of beer on the wall, 2 bottles of beer.\nTake one down and pass it around, 1 bottle of beer on the wall.\n",
+     })
   end
   
   def lyrics
-    "#{fork.count} #{fork.container} of #{liquid} #{location}, ".capitalize +
-    "#{fork.count} #{fork.container} of #{liquid}.\n" +
-    "#{fork.action}, " +
-    "#{fork.second_count} #{fork.second_container} of #{liquid} #{location}.\n"
-  end
-
-  def liquid
-    'beer'
-  end
-
-  def location
-    'on the wall'
-  end
-end
-
-class Fork
-  attr_reader :number
-
-  def initialize(number)
-    @number = number
-  end
-
-  def tine(boolean, first_option, second_option)
-    boolean ? first_option : second_option
-  end
-  
-  def action
-    tine(number == 0, "Go to the store and buy some more", "Take #{pronoun} down and pass it around")
-  end
-
-  def count
-    tine(number == 0, 'no more', number)
-  end
-
-  def second_count
-    tine(number == 1, 'no more',  (number-1)%100 )
-  end
-  
-  def container
-    tine(number == 1,'bottle', 'bottles')
-  end
-  
-  def second_container
-    tine(number == 2, 'bottle', 'bottles')
-  end
-
-  def pronoun
-    tine(number == 1, 'it', 'one')
+    verses[n]
   end
 end
